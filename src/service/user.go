@@ -21,13 +21,10 @@ var (
 
 type CommandUser interface {
 	CreateNewUser(ctx context.Context, name string, email string, password string, telefone string) (string, error)
-	//AddInformationProfile(ctx context.Context, id string, job []string, message string) error
+	EditUser(ctx context.Context, userId string, name string, email string, password string, telefone string) error
+	DeleteUser(ctx context.Context, userId string) error
 	GetInformationUser(ctx context.Context, id string) ([]bson.M, error)
 	ValidateUser(ctx context.Context, email string, password string) ([]bson.M, error)
-	/*AddRelationFriendProfile(ctx context.Context, UserId_user string, UserId_value string, friend *models.Friend) error
-	AddRequestFriend(ctx context.Context, UserId string, FriendId string, friendUser *models.Friend) error
-	DeleteFriendRequest(ctx context.Context, UserId string, FriendId string, friendUser *models.Friend) error
-	AddContent(ctx context.Context, id string, content string) error*/
 }
 
 type user struct{}
@@ -61,31 +58,39 @@ func (u *user) CreateNewUser(ctx context.Context, name string, email string, pas
 	return userId, nil
 }
 
-/*func (u *user) InformationUserCard(ctx context.Context, name string, number string, data string,) error {
-	userId := map[string]interface{}{"UserId": id}
+func (u *user) EditUser(ctx context.Context, userId string, name string, email string, password string, telefone string) error {
 
-	//existe com aquele id
-	mgoErr := storage.GetInstance().FindOne(ctx, "profile", userId)
-	if mgoErr != nil {
-		return errors.New("Add Information Profile: problem to Find Id into MongoDB")
+	//ver logica para o bookId porque a pessoa conseguiria alterar o bookId nesse caso...
+	user := &models.User{ //mudar depois para interface normal.
+		UserId:   userId,
+		Email:    email,
+		Name:     name,
+		PassWord: password,
+		Telefone: telefone,
 	}
 
-	profileUpdate := map[string]interface{}{
-		"Job":            job,
-		"ProfileMessage": message,
-	}
+	userUpdate := structs.Map(user)
+	change := bson.M{"$set": userUpdate}
 
-	fmt.Println(profileUpdate)
-
-	change := bson.M{"$set": profileUpdate}
-
-	_, err := storage.GetInstance().UpdateOne(ctx, "profile", userId, change)
+	UserId := map[string]interface{}{"UserId": userId}
+	_, err := storage.GetInstance().UpdateOne(ctx, "user", UserId, change)
 	if err != nil {
-		return errors.New("Create New Profile: problem to update into MongoDB")
+		return errors.New("Edit User: problem to uptade into MongoDB")
 	}
 
 	return nil
-}*/
+}
+
+func (u *user) DeleteUser(ctx context.Context, userId string) error {
+
+	UserId := map[string]interface{}{"UserId": userId}
+	err := storage.GetInstance().Remove(ctx, "user", UserId)
+	if err != nil {
+		return errors.New("Edit User: problem to uptade into MongoDB")
+	}
+
+	return nil
+}
 
 func (u *user) GetInformationUser(ctx context.Context, id string) ([]bson.M, error) {
 	var user models.User

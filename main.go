@@ -49,6 +49,8 @@ func main() {
 
 	router.POST("/login", handlers.ValidateUser)
 	router.POST("/cadastro", handlers.CreateUser)
+	router.POST("/user/edit", handlers.EditUser)
+	router.POST("/user/delete", handlers.DeleteUser)
 	router.POST("/getInformation", handlers.GetInformationByUserId)
 	router.POST("/book/create", handlers.CreateBook)
 	router.POST("/book/edit", handlers.EditBook)
@@ -56,6 +58,10 @@ func main() {
 	router.POST("/book/name", handlers.GetBookByName)
 	router.POST("/book/autor", handlers.GetBookByAutor)
 	router.POST("/book/genero", handlers.GetBookByGenero)
+	router.POST("/card/create", handlers.CreateCard)
+	router.POST("/card/edit", handlers.EditCard)
+	router.POST("/card/delete", handlers.DeleteCard)
+	router.POST("/card/user", handlers.GetCardsByUserId)
 
 	router.Run(":1323")
 }

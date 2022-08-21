@@ -81,8 +81,7 @@ func CreateUser(c *gin.Context) {
 	c.String(http.StatusOK, userId)
 }
 
-/*
-func EditUserPermission(c *gin.Context) {
+func EditUser(c *gin.Context) {
 
 	json_map := make(map[string]interface{})
 	err := json.NewDecoder(c.Request.Body).Decode(&json_map)
@@ -92,29 +91,71 @@ func EditUserPermission(c *gin.Context) {
 		return
 	}
 
-	permission := json_map["permission"].(string) //está dando erro quando tenta pegar o "email" e ele não existe.
-	userId := json_map["userId"].(string)         //está dando erro quando tenta pegar o "email" e ele não existe.
+	name := json_map["name"].(string)
+	email := json_map["email"].(string) //está dando erro quando tenta pegar o "email" e ele não existe.
+	password := json_map["password"].(string)
+	telefone := json_map["telefone"].(string)
+	userId := json_map["userId"].(string)
+
+	if name == "" {
+		c.String(http.StatusBadRequest, "Edit User Error: name not find")
+		return
+	}
+
+	if email == "" {
+		c.String(400, "Edit User Error: email not find")
+		return
+	}
+
+	if password == "" {
+		c.String(400, "Edit User Error: password not find")
+		return
+	}
+
+	if telefone == "" {
+		c.String(400, "Edit User Error: password not find")
+		return
+	}
 
 	if userId == "" {
-		c.String(400, "Edit User Permission Error: userId not find")
+		c.String(400, "Edit User Error: password not find")
 		return
 	}
 
-	if permission == "" {
-		c.String(400, "Edit User Permission Error: permission not find")
-		return
-	}
-
-	//ver se permission é um numero valido (0,1,2,3)
-
-	err = service.GetInstanceUser().EditPermissionUser(context.Background(), userId, permission)
+	err = service.GetInstanceUser().EditUser(context.Background(), userId, name, email, password, telefone)
 	if err != nil {
-		c.String(403, err.Error())
+		c.String(400, err.Error())
 		return
 	}
 
-	c.String(http.StatusOK, "Ok")
-}*/
+	c.String(http.StatusOK, "")
+}
+
+func DeleteUser(c *gin.Context) {
+
+	json_map := make(map[string]interface{})
+	err := json.NewDecoder(c.Request.Body).Decode(&json_map)
+
+	if err != nil {
+		c.String(400, "%s", err)
+		return
+	}
+
+	userId := json_map["userId"].(string)
+
+	if userId == "" {
+		c.String(http.StatusBadRequest, "Delete User Error: userId not find")
+		return
+	}
+
+	err = service.GetInstanceUser().DeleteUser(context.Background(), userId)
+	if err != nil {
+		c.String(400, err.Error())
+		return
+	}
+
+	c.String(http.StatusOK, "")
+}
 
 func GetInformationByUserId(c *gin.Context) {
 
