@@ -12,67 +12,66 @@ to run, download project and at terminal digit: go run main.go
 
 ### User
 
-    POST /login    ValidateUser
-    entrada:
 ``` sh 
-    {
-        "email": "email@email.com",
-        "password":"senha"
-    } 
+POST /login    ValidateUser
+entrada:
+{
+  "email": "email@email.com",
+  "password":"senha"
+} 
 
-    return: userId "userId"
+return: userId "userId"
 ```
 
-
-	POST /cadastro CreateUser
-    entrada:
 ``` sh 
-    {
-        "name": "name",
-        "email":"email@email.com",
-        "password": "password",
-        "telefone": "telefone",
-    } 
+POST /cadastro CreateUser
+entrada:
+{
+  "name": "name",
+  "email":"email@email.com",
+  "password": "password",
+  "telefone": "telefone",
+} 
 
-    return: ""
+return: ""
 ```
-	POST /user/edit EditUser
-    entrada:
 ``` sh 
-    {
-        "userId": "number",
-        "name": "name",
-        "email":"email@email.com",
-        "password": "password",
-        "telefone": "telefone",
-    } 
+POST /user/edit EditUser
+entrada:
+{
+  "userId": "number",
+  "name": "name",
+  "email":"email@email.com",
+  "password": "password",
+  "telefone": "telefone",
+} 
 
-    return: ""
+return: ""
 ```   
-	POST /user/delete DeleteUser
-    entrada:
 ``` sh 
-    {
-        "userId": "number",
-    } 
+POST /user/delete DeleteUser
+entrada:
+{
+  "userId": "number",
+} 
 
-    return: ""
+return: ""
 ``` 
-	/getInformation GetInformationByUserId
-    entrada:
 ``` sh 
-    {
-        "userId": "number",
-    } 
+POST /getInformation GetInformationByUserId
+entrada:
+{
+  "userId": "number",
+} 
 
-    return:    
-    {
-        "userId": "number",
-        "name": "name",
-        "email":"email@email.com",
-        "password": "password",
-        "telefone": "telefone",
-    }
+return:    
+{
+  "userId": "number",
+  "name": "name",
+  "email":"email@email.com",
+  "password": "password",
+  "telefone": "telefone",
+}
 ``` 
 
 ### Book
