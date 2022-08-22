@@ -131,6 +131,63 @@ func EditUser(c *gin.Context) {
 	c.String(http.StatusOK, "")
 }
 
+func AddAdress(c *gin.Context) {
+
+	json_map := make(map[string]interface{})
+	err := json.NewDecoder(c.Request.Body).Decode(&json_map)
+
+	if err != nil {
+		c.String(400, "%s", err)
+		return
+	}
+
+	userId := json_map["userId"].(string)
+	rua := json_map["rua"].(string)
+	numero := json_map["numero"].(string) //está dando erro quando tenta pegar o "email" e ele não existe.
+	bairro := json_map["bairro"].(string)
+	complemento := json_map["complemento"].(string)
+	cidade := json_map["cidade"].(string)
+	cep := json_map["cep"].(string)
+
+	if rua == "" {
+		c.String(http.StatusBadRequest, "Edit User Error: name not find")
+		return
+	}
+
+	if numero == "" {
+		c.String(400, "Edit User Error: email not find")
+		return
+	}
+
+	if bairro == "" {
+		c.String(400, "Edit User Error: password not find")
+		return
+	}
+
+	if complemento == "" {
+		c.String(400, "Edit User Error: password not find")
+		return
+	}
+
+	if cidade == "" {
+		c.String(400, "Edit User Error: password not find")
+		return
+	}
+
+	if cep == "" {
+		c.String(400, "Edit User Error: password not find")
+		return
+	}
+
+	err = service.GetInstanceUser().AddAdress(context.Background(), userId, rua, complemento, numero, bairro, cidade, cep)
+	if err != nil {
+		c.String(400, err.Error())
+		return
+	}
+
+	c.String(http.StatusOK, "")
+}
+
 func DeleteUser(c *gin.Context) {
 
 	json_map := make(map[string]interface{})

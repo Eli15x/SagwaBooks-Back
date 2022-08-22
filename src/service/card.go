@@ -18,8 +18,8 @@ var (
 )
 
 type CommandCard interface {
-	CreateNewCard(ctx context.Context, userId string, numero string, name string, data string) error
-	EditCard(ctx context.Context, userId string, numero string, name string, data string) error
+	CreateNewCard(ctx context.Context, userId string, numero string, name string, mounth string, year string) error
+	EditCard(ctx context.Context, userId string, numero string, name string, mounth string, year string) error
 	DeleteCard(ctx context.Context, numero string) error
 	GetInformationByUserId(ctx context.Context, userId string) ([]bson.M, error)
 }
@@ -33,12 +33,13 @@ func GetInstanceCard() CommandCard {
 	return instanceCard
 }
 
-func (c *Card) CreateNewCard(ctx context.Context, userId string, numero string, name string, data string) error {
+func (c *Card) CreateNewCard(ctx context.Context, userId string, numero string, name string, mounth string, year string) error {
 	Card := &models.Card{
 		UserId: userId,
 		Numero: numero,
 		Name:   name,
-		Data:   data,
+		Mounth: mounth,
+		Year:   year,
 	}
 
 	CardInsert := structs.Map(Card)
@@ -51,14 +52,15 @@ func (c *Card) CreateNewCard(ctx context.Context, userId string, numero string, 
 	return nil
 }
 
-func (c *Card) EditCard(ctx context.Context, userId string, numero string, name string, data string) error {
+func (c *Card) EditCard(ctx context.Context, userId string, numero string, name string, mounth string, year string) error {
 
 	//ver logica para o CardId porque a pessoa conseguiria alterar o CardId nesse caso...
 	Card := &models.Card{ //mudar depois para interface normal.
 		UserId: userId,
 		Numero: numero,
 		Name:   name,
-		Data:   data,
+		Mounth: mounth,
+		Year:   year,
 	}
 
 	CardUpdate := structs.Map(Card)

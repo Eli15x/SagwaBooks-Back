@@ -62,6 +62,7 @@ func main() {
 	router.POST("/card/edit", handlers.EditCard)
 	router.POST("/card/delete", handlers.DeleteCard)
 	router.POST("/card/user", handlers.GetCardsByUserId)
+	router.POST("/card/validate", handlers.ValidatedCard)
 
 	router.Run(":1323")
 }

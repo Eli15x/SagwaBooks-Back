@@ -25,6 +25,7 @@ type CommandUser interface {
 	DeleteUser(ctx context.Context, userId string) error
 	GetInformationUser(ctx context.Context, id string) ([]bson.M, error)
 	ValidateUser(ctx context.Context, email string, password string) ([]bson.M, error)
+	AddAdress(ctx context.Context, userId string, rua string, complemento string, numero string, bairro string, cidade string, cep string) error
 }
 
 type user struct{}
@@ -56,6 +57,30 @@ func (u *user) CreateNewUser(ctx context.Context, name string, email string, pas
 	}
 
 	return userId, nil
+}
+
+func (u *user) AddAdress(ctx context.Context, userId string, rua string, complemento string, numero string, bairro string, cidade string, cep string) error {
+
+	user := map[string]interface{}{
+		"UserId":      userId,
+		"Rua":         rua,
+		"Complemento": complemento,
+		"Numero":      numero,
+		"Bairro":      bairro,
+		"Cidade":      cidade,
+		"Cep":         cep,
+	}
+
+	userUpdate := structs.Map(user)
+	change := bson.M{"$set": userUpdate}
+
+	UserId := map[string]interface{}{"UserId": userId}
+	_, err := storage.GetInstance().UpdateOne(ctx, "user", UserId, change)
+	if err != nil {
+		return errors.New("add Adress User: problem to uptade into MongoDB")
+	}
+
+	return nil
 }
 
 func (u *user) EditUser(ctx context.Context, userId string, name string, email string, password string, telefone string) error {
