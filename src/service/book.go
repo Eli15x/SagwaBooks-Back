@@ -5,7 +5,7 @@ import (
 	"errors"
 	"sync"
 
-	storage "github.com/Eli15x/SagwaBooks-Back/src/client"
+	"github.com/Eli15x/SagwaBooks-Back/src/client"
 	"github.com/Eli15x/SagwaBooks-Back/src/models"
 	"github.com/Eli15x/SagwaBooks-Back/src/repository"
 	"github.com/Eli15x/SagwaBooks-Back/utils"
@@ -51,7 +51,7 @@ func (b *book) CreateNewBook(ctx context.Context, name string, autor string, gen
 
 	bookInsert := structs.Map(book)
 
-	_, err := storage.GetInstance().Insert(ctx, "book", bookInsert)
+	_, err := client.GetInstance().Insert(ctx, "book", bookInsert)
 	if err != nil {
 		return errors.New("Create New book: problem to insert into MongoDB")
 	}
@@ -75,7 +75,7 @@ func (b *book) EditBook(ctx context.Context, bookId string, name string, autor s
 	change := bson.M{"$set": bookUpdate}
 
 	BookId := map[string]interface{}{"BookId": bookId}
-	_, err := storage.GetInstance().UpdateOne(ctx, "book", BookId, change)
+	_, err := client.GetInstance().UpdateOne(ctx, "book", BookId, change)
 	if err != nil {
 		return errors.New("Edit Book: problem to uptade into MongoDB")
 	}
@@ -86,7 +86,7 @@ func (b *book) EditBook(ctx context.Context, bookId string, name string, autor s
 func (b *book) DeleteBook(ctx context.Context, bookId string) error {
 
 	BookId := map[string]interface{}{"BookId": bookId}
-	err := storage.GetInstance().Remove(ctx, "book", BookId)
+	err := client.GetInstance().Remove(ctx, "book", BookId)
 	if err != nil {
 		return errors.New("Edit Book: problem to uptade into MongoDB")
 	}

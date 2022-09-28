@@ -5,7 +5,7 @@ import (
 	"errors"
 	"sync"
 
-	storage "github.com/Eli15x/SagwaBooks-Back/src/client"
+	"github.com/Eli15x/SagwaBooks-Back/src/client"
 	"github.com/Eli15x/SagwaBooks-Back/src/models"
 	"github.com/Eli15x/SagwaBooks-Back/src/repository"
 	"github.com/fatih/structs"
@@ -44,7 +44,7 @@ func (c *Card) CreateNewCard(ctx context.Context, userId string, numero string, 
 
 	CardInsert := structs.Map(Card)
 
-	_, err := storage.GetInstance().Insert(ctx, "card", CardInsert)
+	_, err := client.GetInstance().Insert(ctx, "card", CardInsert)
 	if err != nil {
 		return errors.New("Create New Card: problem to insert into MongoDB")
 	}
@@ -67,7 +67,7 @@ func (c *Card) EditCard(ctx context.Context, userId string, numero string, name 
 	change := bson.M{"$set": CardUpdate}
 
 	Numero := map[string]interface{}{"Numero": numero}
-	_, err := storage.GetInstance().UpdateOne(ctx, "Card", Numero, change)
+	_, err := client.GetInstance().UpdateOne(ctx, "Card", Numero, change)
 	if err != nil {
 		return errors.New("Edit Card: problem to uptade into MongoDB")
 	}
@@ -78,7 +78,7 @@ func (c *Card) EditCard(ctx context.Context, userId string, numero string, name 
 func (c *Card) DeleteCard(ctx context.Context, numero string) error {
 
 	Numero := map[string]interface{}{"Numero": numero}
-	err := storage.GetInstance().Remove(ctx, "card", Numero)
+	err := client.GetInstance().Remove(ctx, "card", Numero)
 	if err != nil {
 		return errors.New("Delete Card: problem to uptade into MongoDB")
 	}

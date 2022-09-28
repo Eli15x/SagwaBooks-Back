@@ -5,7 +5,7 @@ import (
 	"errors"
 	"sync"
 
-	storage "github.com/Eli15x/SagwaBooks-Back/src/client"
+	"github.com/Eli15x/SagwaBooks-Back/src/client"
 	"github.com/Eli15x/SagwaBooks-Back/src/models"
 	"github.com/Eli15x/SagwaBooks-Back/src/repository"
 	"github.com/Eli15x/SagwaBooks-Back/utils"
@@ -51,7 +51,7 @@ func (u *user) CreateNewUser(ctx context.Context, name string, email string, pas
 
 	userInsert := structs.Map(user)
 
-	_, err := storage.GetInstance().Insert(ctx, "user", userInsert)
+	_, err := client.GetInstance().Insert(ctx, "user", userInsert)
 	if err != nil {
 		return "", errors.New("Create New User: problem to insert into MongoDB")
 	}
@@ -75,7 +75,7 @@ func (u *user) AddAdress(ctx context.Context, userId string, rua string, complem
 	change := bson.M{"$set": userUpdate}
 
 	UserId := map[string]interface{}{"UserId": userId}
-	_, err := storage.GetInstance().UpdateOne(ctx, "user", UserId, change)
+	_, err := client.GetInstance().UpdateOne(ctx, "user", UserId, change)
 	if err != nil {
 		return errors.New("add Adress User: problem to uptade into MongoDB")
 	}
@@ -98,7 +98,7 @@ func (u *user) EditUser(ctx context.Context, userId string, name string, email s
 	change := bson.M{"$set": userUpdate}
 
 	UserId := map[string]interface{}{"UserId": userId}
-	_, err := storage.GetInstance().UpdateOne(ctx, "user", UserId, change)
+	_, err := client.GetInstance().UpdateOne(ctx, "user", UserId, change)
 	if err != nil {
 		return errors.New("Edit User: problem to uptade into MongoDB")
 	}
@@ -109,7 +109,7 @@ func (u *user) EditUser(ctx context.Context, userId string, name string, email s
 func (u *user) DeleteUser(ctx context.Context, userId string) error {
 
 	UserId := map[string]interface{}{"UserId": userId}
-	err := storage.GetInstance().Remove(ctx, "user", UserId)
+	err := client.GetInstance().Remove(ctx, "user", UserId)
 	if err != nil {
 		return errors.New("Edit User: problem to uptade into MongoDB")
 	}

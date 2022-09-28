@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"time"
 
-	storage "github.com/Eli15x/SagwaBooks-Back/src/client"
+	"github.com/Eli15x/SagwaBooks-Back/src/client"
 	"github.com/Eli15x/SagwaBooks-Back/src/handlers"
 	"github.com/bugsnag/bugsnag-go"
 	"github.com/gin-contrib/cors"
@@ -33,7 +33,7 @@ func main() {
 
 	defer cancel()
 	//Connection to Mongo
-	if err := storage.GetInstance().Initialize(ctx); err != nil {
+	if err := client.GetInstance().Initialize(ctx); err != nil {
 		bugsnag.Notify(fmt.Errorf("[MONGO DB - MovieWorkNow] Could not resolve Data access layer. Error:"))
 	}
 
@@ -51,6 +51,11 @@ func main() {
 	router.POST("/cadastro", handlers.CreateUser)
 	router.POST("/user/edit", handlers.EditUser)
 	router.POST("/user/delete", handlers.DeleteUser)
+	router.POST("/writer/create", handlers.CreateWriter)
+	router.POST("/writer/get", handlers.GetInformationWriter)
+	router.POST("/writer/getAll", handlers.GetInformationWriter)
+	router.POST("/writer/edit", handlers.EditWriter)
+	router.POST("/writer/delete", handlers.DeleteWriter)
 	router.POST("/getInformation", handlers.GetInformationByUserId)
 	router.POST("/book/create", handlers.CreateBook)
 	router.POST("/book/edit", handlers.EditBook)
