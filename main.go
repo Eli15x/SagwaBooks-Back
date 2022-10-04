@@ -53,7 +53,7 @@ func main() {
 	router.POST("/user/delete", handlers.DeleteUser)
 	router.POST("/writer/create", handlers.CreateWriter)
 	router.POST("/writer/get", handlers.GetInformationWriter)
-	router.POST("/writer/getAll", handlers.GetInformationWriter)
+	router.GET("/writer/getAll", handlers.GetInformationWriters)
 	router.POST("/writer/edit", handlers.EditWriter)
 	router.POST("/writer/delete", handlers.DeleteWriter)
 	router.POST("/getInformation", handlers.GetInformationByUserId)

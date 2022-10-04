@@ -19,8 +19,8 @@ var (
 )
 
 type CommandWriter interface {
-	CreateNewWriter(ctx context.Context, email string, password string, birthDate string, name string, city string, rg string, cpf string, telefone string, image string) (string, error)
-	EditWriter(ctx context.Context, writerId string, email string, password string, birthDate string, name string, city string, rg string, cpf string, telefone string, image string) error
+	CreateNewWriter(ctx context.Context, writer *models.Writer) (string, error)
+	EditWriter(ctx context.Context, writer *models.Writer) error
 	GetInformationWriter(ctx context.Context, id string) ([]bson.M, error)
 	DeleteWriter(ctx context.Context, writerId string) error
 	GetInformationWriters(ctx context.Context) ([]bson.M, error)
@@ -36,22 +36,10 @@ func GetInstanceWriter() CommandWriter {
 	return instanceWriter
 }
 
-func (w *writer) CreateNewWriter(ctx context.Context, email string, password string, birthDate string, name string, city string, rg string, cpf string, telefone string, image string) (string, error) {
+func (w *writer) CreateNewWriter(ctx context.Context, writer *models.Writer) (string, error) {
 
-	//na hora de cadastrar conferir se já existe usuario com aquele email.
 	var writerId = utils.CreateCodeId()
-	writer := &models.Writer{
-		WriterId:  writerId,
-		Name:      name,
-		Email:     email,
-		PassWord:  password,
-		Telefone:  telefone,
-		Rg:        rg,
-		Cpf:       cpf,
-		City:      city,
-		BirthDate: birthDate,
-		Image:     image,
-	}
+	writer.WriterId = writerId
 
 	writerInsert := structs.Map(writer)
 
@@ -63,50 +51,12 @@ func (w *writer) CreateNewWriter(ctx context.Context, email string, password str
 	return writerId, nil
 }
 
-/*func (w *writer) AddAdress(ctx context.Context, userId string, rua string, complemento string, numero string, bairro string, cidade string, cep string) error {
-
-	user := map[string]interface{}{
-		"UserId":      userId,
-		"Rua":         rua,
-		"Complemento": complemento,
-		"Numero":      numero,
-		"Bairro":      bairro,
-		"Cidade":      cidade,
-		"Cep":         cep,
-	}
-
-	userUpdate := structs.Map(user)
-	change := bson.M{"$set": userUpdate}
-
-	UserId := map[string]interface{}{"UserId": userId}
-	_, err := client.GetInstance().UpdateOne(ctx, "user", UserId, change)
-	if err != nil {
-		return errors.New("add Adress User: problem to uptade into MongoDB")
-	}
-
-	return nil
-}*/
-
-func (w *writer) EditWriter(ctx context.Context, writerId string, email string, password string, birthDate string, name string, city string, rg string, cpf string, telefone string, image string) error {
-
-	//ver logica para o bookId porque a pessoa conseguiria alterar o bookId nesse caso...
-	writer := &models.Writer{ //mudar depois para interface normal.
-		WriterId:  writerId,
-		Name:      name,
-		Email:     email,
-		PassWord:  password,
-		Telefone:  telefone,
-		Rg:        rg,
-		Cpf:       cpf,
-		City:      city,
-		BirthDate: birthDate,
-		Image:     image,
-	}
+func (w *writer) EditWriter(ctx context.Context, writer *models.Writer) error {
 
 	writerUpdate := structs.Map(writer)
 	change := bson.M{"$set": writerUpdate}
 
-	write := map[string]interface{}{"WriterId": writerId}
+	write := map[string]interface{}{"WriterId": writer.WriterId}
 	_, err := client.GetInstance().UpdateOne(ctx, "writer", write, change)
 	if err != nil {
 		return errors.New("Edit Write: problem to uptade into MongoDB")
@@ -131,7 +81,7 @@ func (w *writer) GetInformationWriter(ctx context.Context, id string) ([]bson.M,
 
 	WriterId := map[string]interface{}{"WriterId": id}
 
-	result, err := repository.Find(ctx, "user", WriterId, &Writer)
+	result, err := repository.Find(ctx, "writer", WriterId, &Writer)
 	if err != nil {
 		return nil, errors.New("Get Writer error: problem to Find Id into MongoDB")
 	}
@@ -142,9 +92,7 @@ func (w *writer) GetInformationWriter(ctx context.Context, id string) ([]bson.M,
 func (w *writer) GetInformationWriters(ctx context.Context) ([]bson.M, error) {
 	var Writer models.Writer
 
-	WriterId := map[string]interface{}{"WriterId": ""}
-
-	result, err := repository.Find(ctx, "writer", WriterId, &Writer)
+	result, err := repository.FindAll(ctx, "writer", &Writer)
 	if err != nil {
 		return nil, errors.New("Get Writer error: problem to Find Id into MongoDB")
 	}

@@ -6,6 +6,7 @@ import (
 	"sync"
 	"time"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
@@ -21,6 +22,7 @@ var (
 type MongoDB interface {
 	Insert(ctx context.Context, collName string, doc interface{}) (interface{}, error)
 	Find(ctx context.Context, collName string, query map[string]interface{}, doc interface{}) (*mongo.Cursor, error)
+	FindAll(ctx context.Context, collName string, doc interface{}) (*mongo.Cursor, error)
 	FindOne(ctx context.Context, collName string, filter interface{}, opts ...*options.FindOneOptions) MongoFindOneResult
 	Count(ctx context.Context, collName string, query map[string]interface{}) (int64, error)
 	UpdateOne(ctx context.Context, collName string, query map[string]interface{}, doc interface{}) (*mongo.UpdateResult, error)
@@ -92,6 +94,15 @@ func (m *mongodbImpl) Insert(ctx context.Context, collName string, doc interface
 // Find finds all documents in the collection
 func (m *mongodbImpl) Find(ctx context.Context, collName string, query map[string]interface{}, doc interface{}) (*mongo.Cursor, error) {
 	cur, err := m.client.Database(m.dbName).Collection(collName).Find(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+
+	return cur, nil
+}
+
+func (m *mongodbImpl) FindAll(ctx context.Context, collName string, doc interface{}) (*mongo.Cursor, error) {
+	cur, err := m.client.Database(m.dbName).Collection(collName).Find(ctx, bson.D{})
 	if err != nil {
 		return nil, err
 	}
