@@ -63,6 +63,7 @@ func main() {
 	router.POST("/book/name", handlers.GetBookByName)
 	router.POST("/book/autor", handlers.GetBookByAutor)
 	router.POST("/book/genero", handlers.GetBookByGenero)
+	router.POST("/book/priority", handlers.GetBookByPriority)
 	router.POST("/card/create", handlers.CreateCard)
 	router.POST("/card/edit", handlers.EditCard)
 	router.POST("/card/delete", handlers.DeleteCard)

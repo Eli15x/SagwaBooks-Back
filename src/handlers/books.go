@@ -246,3 +246,26 @@ func GetBookByAutor(c *gin.Context) {
 
 	c.JSON(http.StatusOK, result)
 }
+
+func GetBookByPriority(c *gin.Context) {
+
+	json_map := make(map[string]interface{})
+	err := json.NewDecoder(c.Request.Body).Decode(&json_map)
+
+	if err != nil {
+		c.String(400, "%s", err)
+		return
+	}
+
+	priority := json_map["priority"].(string)
+
+	result, err := service.GetInstanceBook().GetInformationByPriority(context.Background(), priority)
+	if err != nil {
+		c.String(400, err.Error())
+		return
+	}
+
+	log.Infof("[GetInformation] Object : %s \n", result, "")
+
+	c.JSON(http.StatusOK, result)
+}

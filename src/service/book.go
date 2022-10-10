@@ -25,6 +25,7 @@ type CommandBook interface {
 	GetInformationByName(ctx context.Context, name string) ([]bson.M, error)
 	GetInformationByAutor(ctx context.Context, autor string) ([]bson.M, error)
 	GetInformationByGenero(ctx context.Context, genero string) ([]bson.M, error)
+	GetInformationByPriority(ctx context.Context, priority string) ([]bson.M, error)
 }
 
 type book struct{}
@@ -128,6 +129,19 @@ func (b *book) GetInformationByGenero(ctx context.Context, genero string) ([]bso
 	result, err := repository.Find(ctx, "book", Genero, &book)
 	if err != nil {
 		return nil, errors.New("Get Information By Genero Book: problem to Find genero into MongoDB")
+	}
+
+	return result, nil
+}
+
+func (b *book) GetInformationByPriority(ctx context.Context, priority string) ([]bson.M, error) {
+	var book models.Book
+
+	Prioridade := map[string]interface{}{"Prioridade": priority}
+
+	result, err := repository.Find(ctx, "book", Prioridade, &book)
+	if err != nil {
+		return nil, errors.New("Get Information By Priority Book: problem to Find priority level into MongoDB")
 	}
 
 	return result, nil
